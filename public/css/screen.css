@@ -1,0 +1,24 @@
+
+
+canvas{
+	border:1px solid black;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+}
+
+#controlPanel{
+	width: 250px;
+	float:right;
+	border: 1px solid green;
+}
+
+#slider{
+height: 20px;
+}
+
+input{
+	width: 50px;
+}
