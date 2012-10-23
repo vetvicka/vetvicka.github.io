@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <title>My poi canvas experiment</title>
@@ -30,6 +30,10 @@
 				<td><input type="checkbox" checked="checked" name="showHands" value="true" id="showHands"></input></td>
 			</tr>
 			<tr>
+				<td>Show Poi trails:</td>
+				<td><input type="checkbox" checked="checked" name="showTrails" value="true" id="showTrails"></input></td>
+			</tr>
+			<tr>
 				<td>
 					Arm Length:
 				</td>
@@ -50,6 +54,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Rotation:</td>		
+				<td><span id="poiRotationLabel"></span></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<div id="poiRotation"></div>
+				</td>
+			</tr>
+			<tr>
 				<td><h3>Poi #1</h3></td>
 			</tr>
 			<tr>
@@ -67,11 +80,21 @@
 				<td><input type="checkbox" name="armADirection" value="true" id="armADirection"></input></td>
 			</tr>
 			<tr>
-				<td>Shift:</td>				
+				<td>Shift:</td>	
+				<td><span id="poiAShiftLabel"></span></td>				
 			</tr>
 			<tr>
 				<td colspan=2>
 					<div id="poiAShift"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Rotation:</td>		
+				<td><span id="poiARotationLabel"></span></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<div id="poiARotation"></div>
 				</td>
 			</tr>
 			<tr>
@@ -91,8 +114,32 @@
 			<tr>
 				<td><input type="checkbox" name="armBDirection" value="true" id="armBDirection"></input></td>
 			</tr>
+			<tr>
+				<td>Shift:</td>	
+				<td><span id="poiBShiftLabel"></span></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<div id="poiBShift"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Rotation:</td>		
+				<td><span id="poiBRotationLabel"></span></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<div id="poiBRotation"></div>
+				</td>
+			</tr>
 			
 		</table>
+	</div>
+	<div>
+		<p>
+			<input type="button" id="shareURLButton" value="share"></input>
+		</p>
+		<p id="shareURLLabel"></p>
 	</div>
 	<script type="text/javascript" src="./js/testScript.js"></script>
 	<script type="text/javascript" src="./js/controlPanel.js"></script>

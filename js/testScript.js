@@ -15,6 +15,11 @@
     window.armBDirection = false;
     window.armADirection = false;
     window.showHands = true;
+    window.showTrails = true;
+    window.poiAShift = 0;
+    window.poiBShift = 180;
+    window.poiARotation = 0;
+    window.poiBRotation = 0;
     x = Math.round(window.canvas.width / 2);
     y = Math.round(window.canvas.height / 2);
     return window.canvasData = {
@@ -27,7 +32,7 @@
 
   $(function() {
     return $(window).resize(function() {
-      window.canvas.width = window.innerWidth - 200;
+      window.canvas.width = window.innerWidth - 350;
       window.canvas.height = window.innerHeight - 8;
       window.canvasData.x = Math.round(window.canvas.width / 2);
       return window.canvasData.y = Math.round(window.canvas.height / 2);
@@ -35,19 +40,19 @@
   });
 
   degToRad = function(deg) {
-    return deg * 2 * Math.PI / 360;
+    return (deg * 2 * Math.PI) / 360;
   };
 
   $(function() {
-    return setInterval(animate, 17);
+    return setInterval(animate, 21);
   });
 
   calcX = function(origin, deg, poi) {
-    return origin + poi.armLen * Math.sin(poi.shift + degToRad(deg)) + poi.poiLen * Math.sin(poi.beats * (degToRad(deg)));
+    return origin + poi.armLen * Math.sin(degToRad(poi.rotation) + degToRad(deg)) + poi.poiLen * Math.sin(poi.beats * (degToRad(deg)));
   };
 
   calcY = function(origin, deg, poi) {
-    return origin + poi.armLen * Math.cos(poi.shift + degToRad(deg)) + poi.poiLen * Math.cos(poi.beats * (degToRad(deg)));
+    return origin + poi.armLen * Math.cos(degToRad(poi.rotation) + degToRad(deg)) + poi.poiLen * Math.cos(poi.beats * (degToRad(deg)));
   };
 
   drawPoi = function(poi) {
@@ -64,7 +69,7 @@
       ctx.strokeStyle = "#cacaca";
       ctx.stroke();
     }
-    if (poi.showPath === true) {
+    if (window.showTrails === true) {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
       for (i = _i = 0; _i <= 360; i = ++_i) {
@@ -77,8 +82,8 @@
     }
     if (window.showHands === true) {
       ctx.beginPath();
-      x = x0 + poi.armLen * Math.sin(poi.shift + degToRad(poi.fromDeg));
-      y = y0 + poi.armLen * Math.cos(poi.shift + degToRad(poi.fromDeg));
+      x = x0 + poi.armLen * Math.sin(degToRad(poi.rotation) + degToRad(poi.fromDeg));
+      y = y0 + poi.armLen * Math.cos(degToRad(poi.rotation) + degToRad(poi.fromDeg));
       ctx.arc(x, y, 7, 0, Math.PI * 2);
       ctx.fillStyle = "brown";
       ctx.fill();
@@ -104,7 +109,7 @@
       ctx.lineTo(x, y);
       ctx.strokeStyle = poi.poiColor;
       ctx.lineWidth = 10 * (linePos-- / 90);
-      if (breaker % 4 === 0) {
+      if (breaker % 7 === 0) {
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -122,39 +127,39 @@
     ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
     pos = window.canvasData.pos;
     poiA = {
-      fromDeg: pos + 90,
-      toDeg: pos,
+      fromDeg: pos + 90 + window.poiAShift,
+      toDeg: pos + window.poiAShift,
       poiColor: "Red",
       beats: window.poiABeats,
       showPath: true,
-      shift: 0,
+      rotation: window.poiARotation,
       showHand: true,
       armLen: window.canvas.height / 4 * (window.armLen / 100),
       poiLen: window.canvas.height / 4 * (window.poiLen / 100)
     };
     poiB = {
-      fromDeg: pos + 90 + 180,
-      toDeg: pos + 180,
+      fromDeg: pos + 90 + window.poiBShift,
+      toDeg: pos + window.poiBShift,
       poiColor: "Green",
       beats: window.poiBBeats,
       showPath: true,
-      shift: 0,
+      rotation: window.poiBRotation,
       showHand: true,
       armLen: window.canvas.height / 4 * (window.armLen / 100),
       poiLen: window.canvas.height / 4 * (window.poiLen / 100)
     };
     if (window.armADirection) {
-      poiA.fromDeg = 360 - pos;
-      poiA.toDeg = 360 - pos + 90;
+      poiA.fromDeg = 360 - pos + window.poiAShift;
+      poiA.toDeg = 360 - pos + 90 + window.poiAShift;
     }
     if (window.armBDirection) {
-      poiB.fromDeg = 360 - pos + 180;
-      poiB.toDeg = 360 - pos + 90 + 180;
+      poiB.fromDeg = 360 - pos + window.poiBShift;
+      poiB.toDeg = 360 - pos + 90 + window.poiBShift;
     }
     drawPoi(poiA);
     drawPoi(poiB);
     oldPos = window.canvasData.pos;
-    return window.canvasData.pos = (pos + window.canvasData.speed) % 360;
+    return window.canvasData.pos = (pos + 0.5 + window.canvasData.speed) % 360;
   };
 
 }).call(this);

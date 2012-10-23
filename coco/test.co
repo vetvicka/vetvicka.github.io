@@ -1,0 +1,15 @@
+a = 5
+b = 4
+a == b
+a === b
+a != b
+a !== b
+a is b
+a is not b
+a ()
+a - b
+a-b
+
+class myClass
+	(@name) -> 
+		@what = 0

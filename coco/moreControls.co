@@ -1,0 +1,109 @@
+# prepis JS funkce na cteni parametru z URL
+/*
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+*/
+
+getURLParameter = (name) ->
+	decodeURI((RegExp(name + '=' + '(.+?)(&|$)') .exec(location.search)||[,null])[1])
+
+
+	# JSON test
+$ -> 
+	encoded = getURLParameter 'data'
+	# alert encoded
+	if encoded != 'null'
+		# alert "noooooo"
+		data = decodeURIComponent encoded
+		obj = window.JSON.parse data
+		window.armLen = obj.armLen
+		window.poiLen = obj.poiLen
+		window.poiABeats = obj.poiABeats
+		window.poiBBeats = obj.poiBBeats
+		window.armBDirection = obj.armBDirection
+		window.armADirection = obj.armADirection
+		window.showHands = obj.showHands
+		window.showTrails = obj.showTrails
+		window.poiAShift = obj.poiAShift
+		window.poiBShift = obj.poiBShift
+		window.poiARotation = obj.poiARotation
+		window.poiBRotation = obj.poiBRotation
+	
+$ ->
+	$ '#shareURLButton' .click ->
+		# alert window.location.pathname
+		obj = 
+			armLen: window.armLen
+			poiLen: window.poiLen
+			poiABeats: window.poiABeats	
+			poiBBeats: window.poiBBeats
+			armBDirection: window.armBDirection
+			armADirection: window.armADirection
+			showHands: window.showHands
+			showTrails: window.showTrails
+			poiAShift: window.poiAShift
+			poiBShift: window.poiBShift
+			poiARotation: window.poiARotation
+			poiBRotation: window.poiBRotation
+		data = window.JSON.stringify(obj)
+		txt = encodeURIComponent data
+		link = window.location.pathname + '?data=' + txt
+		$ '#shareURLLabel' .html '<a href="' + link + '">-> Link <-</a>'
+	
+$ ->
+	$ '#showHands' .change ->
+		if $ '#showHands' .attr('checked')  == "checked"
+			window.showHands = true
+		else
+			window.showHands = false 
+			
+$ ->
+	$ '#showTrails' .change ->
+		if $ '#showTrails' .attr('checked') == "checked"
+			window.showTrails = true
+		else
+			window.showTrails = false 
+
+/*			
+$ ->
+	$ '#poiAShift' .change ->
+		select = $('#poiAShift')[0]
+		shift = select .options[select.selectedIndex] .value
+		window.poiAShift = shift
+*/
+		
+$ -> 
+	$('#poiAShift').slider min:0, max:360, value: 0, 
+	slide: (event, ui) -> 
+		window.poiAShift = ui.value
+		$ '#poiAShiftLabel' .text ui.value + '°'
+	
+$ -> 
+	$('#poiBShift').slider min:0, max:360, value: 180,
+	slide: (event, ui) ->
+		window.poiBShift = ui.value
+		$ '#poiBShiftLabel' .text ui.value + '°'
+		
+$ -> 
+	$('#poiBRotation').slider min:0, max:360, value: 0,
+	slide: (event, ui) ->
+		window.poiBRotation = ui.value
+		$ '#poiBRotationLabel' .text ui.value + '°'
+	
+$ -> 
+	$('#poiARotation').slider min:0, max:360, value: 0,
+	slide: (event, ui) ->
+		window.poiARotation = ui.value
+		$ '#poiARotationLabel' .text ui.value + '°'
+			
+$ -> 
+	$('#poiRotation').slider min:0, max:360, value: 0, 
+	slide: (event, ui) -> 
+		window.poiARotation = ui.value
+		window.poiBRotation = ui.value
+		$ '#poiARotationLabel' .text ui.value + '°'
+		$ '#poiARotationLabel' .text ui.value + '°'
+		$ '#poiBRotationLabel' .text ui.value + '°'

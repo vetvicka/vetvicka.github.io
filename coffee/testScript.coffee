@@ -11,6 +11,11 @@ $ ->
 	window.armBDirection = false
 	window.armADirection = false
 	window.showHands = true
+	window.showTrails = true
+	window.poiAShift = 0
+	window.poiBShift = 180
+	window.poiARotation = 0
+	window.poiBRotation = 0
 	x = Math.round window.canvas.width / 2
 	y = Math.round window.canvas.height / 2
 		# speed - how many degres will hands move per frame
@@ -19,24 +24,24 @@ $ ->
 
 $ ->
 	$(window).resize ->
-		window.canvas.width = window.innerWidth - 200
+		window.canvas.width = window.innerWidth - 350
 		window.canvas.height = window.innerHeight - 8
 		window.canvasData.x = Math.round window.canvas.width / 2
 		window.canvasData.y = Math.round window.canvas.height / 2
 	
 
 	# degres to radians...
-degToRad = (deg) -> deg * 2 * Math.PI / 360
+degToRad = (deg) -> (deg * 2 * Math.PI) / 360
 
 
 	# main loop, 17ms ~ 60 fps
 $ ->
-	setInterval animate, 17
+	setInterval animate, 21
 	
 	
 	# The MAIN equation for poi position
-calcX = (origin, deg, poi) -> origin + poi.armLen * Math.sin(poi.shift + degToRad deg) + poi.poiLen * Math.sin(poi.beats * (degToRad deg))
-calcY = (origin, deg, poi) -> origin + poi.armLen * Math.cos(poi.shift + degToRad deg) + poi.poiLen * Math.cos(poi.beats * (degToRad deg))
+calcX = (origin, deg, poi) -> origin + poi.armLen * Math.sin(degToRad(poi.rotation) + degToRad deg) + poi.poiLen * Math.sin(poi.beats * (degToRad deg))
+calcY = (origin, deg, poi) -> origin + poi.armLen * Math.cos(degToRad(poi.rotation) + degToRad deg) + poi.poiLen * Math.cos(poi.beats * (degToRad deg))
 
 	
 drawPoi = (poi) ->
@@ -56,7 +61,7 @@ drawPoi = (poi) ->
 		ctx.strokeStyle = "#cacaca"
 		ctx.stroke()
 	
-	if poi.showPath == true
+	if window.showTrails == true
 		ctx.beginPath()
 		ctx.lineWidth = 0.5
 		for i in [0..360]
@@ -69,8 +74,8 @@ drawPoi = (poi) ->
 		
 	if window.showHands == true
 		ctx.beginPath()
-		x = x0 + poi.armLen * Math.sin(poi.shift + degToRad poi.fromDeg)
-		y = y0 + poi.armLen * Math.cos(poi.shift + degToRad poi.fromDeg)
+		x = x0 + poi.armLen * Math.sin(degToRad(poi.rotation) + degToRad poi.fromDeg)
+		y = y0 + poi.armLen * Math.cos(degToRad(poi.rotation) + degToRad poi.fromDeg)
 		ctx.arc x, y, 7, 0, Math.PI*2
 		ctx.fillStyle = "brown" 
 		ctx.fill()
@@ -101,7 +106,7 @@ drawPoi = (poi) ->
 		ctx.lineTo x, y	
 		ctx.strokeStyle = poi.poiColor
 		ctx.lineWidth = (10 * (linePos-- / 90))
-		if breaker % 4 == 0
+		if breaker % 7 == 0
 			ctx.stroke()
 			ctx.beginPath()
 			ctx.moveTo x, y
@@ -124,37 +129,37 @@ animate = ->
 
 	# poiObject, contains all data for functions
 	poiA = 
-		fromDeg: pos + 90,
-		toDeg: pos,
+		fromDeg: pos + 90 + window.poiAShift,
+		toDeg: pos + window.poiAShift,
 		poiColor: "Red",
 		beats: window.poiABeats,
 		showPath: true,
-		shift: 0#Math.PI,
+		rotation: window.poiARotation, # actually rotation !
 		showHand: true,
 		armLen: window.canvas.height / 4 * (window.armLen / 100),
 		poiLen: window.canvas.height / 4 * (window.poiLen / 100),
 		# armClockwise: true
 	poiB = 
-		fromDeg: pos + 90 + 180,
-		toDeg: pos + 180,
+		fromDeg: pos + 90 + window.poiBShift,
+		toDeg: pos + window.poiBShift,
 		poiColor: "Green",
 		beats: window.poiBBeats,
 		showPath: true,
-		shift: 0#Math.PI,
+		rotation: window.poiBRotation,
 		showHand: true,
 		armLen: window.canvas.height / 4 * (window.armLen / 100)
 		poiLen: window.canvas.height / 4 * (window.poiLen / 100)
 		
 	if window.armADirection
-		poiA.fromDeg = 360 - pos
-		poiA.toDeg = 360 - pos + 90
+		poiA.fromDeg = 360 - pos + window.poiAShift
+		poiA.toDeg = 360 - pos + 90 + window.poiAShift
 	
 	if window.armBDirection
-		poiB.fromDeg = 360 - pos + 180
-		poiB.toDeg = 360 - pos + 90 + 180
+		poiB.fromDeg = 360 - pos + window.poiBShift
+		poiB.toDeg = 360 - pos + 90 + window.poiBShift
 	
 	drawPoi poiA
 	drawPoi poiB
 	oldPos = window.canvasData.pos
-	window.canvasData.pos = (pos + window.canvasData.speed) % 360
+	window.canvasData.pos = (pos + 0.5 + window.canvasData.speed) % 360
 	
