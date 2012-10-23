@@ -14,6 +14,7 @@
     window.poiBBeats = -3;
     window.armBDirection = false;
     window.armADirection = false;
+    window.showHands = true;
     x = Math.round(window.canvas.width / 2);
     y = Math.round(window.canvas.height / 2);
     return window.canvasData = {
@@ -54,13 +55,15 @@
     x0 = window.canvasData.x;
     y0 = window.canvasData.y;
     ctx = window.context;
-    ctx.beginPath();
-    x = window.canvasData.x;
-    y = window.canvasData.y;
-    ctx.arc(x, y, poi.armLen, 0, Math.PI * 2);
-    ctx.lineWidth = 0.5;
-    ctx.strokeStyle = "#cacaca";
-    ctx.stroke();
+    if (window.showHands === true) {
+      ctx.beginPath();
+      x = window.canvasData.x;
+      y = window.canvasData.y;
+      ctx.arc(x, y, poi.armLen, 0, Math.PI * 2);
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = "#cacaca";
+      ctx.stroke();
+    }
     if (poi.showPath === true) {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
@@ -72,7 +75,7 @@
       }
       ctx.stroke();
     }
-    if (poi.showHand === true) {
+    if (window.showHands === true) {
       ctx.beginPath();
       x = x0 + poi.armLen * Math.sin(poi.shift + degToRad(poi.fromDeg));
       y = y0 + poi.armLen * Math.cos(poi.shift + degToRad(poi.fromDeg));
